@@ -16,7 +16,7 @@ object Main extends IOApp {
     for {
       counterRef <- Ref[IO].of(0)
       serverOptions: Http4sServerOptions[IO] = Http4sServerOptions.default[IO]
-      serverLogic = new ServerLogic(counterRef)
+      serverLogic = new ServerLogic[IO](counterRef)
       routes = Http4sServerInterpreter[IO](serverOptions).toRoutes(serverLogic.all)
       app: Http[IO, IO] = Router("/" -> routes).orNotFound
       finalApp = Logger.httpApp(logHeaders = true, logBody = false)(GZip(app))

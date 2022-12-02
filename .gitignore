@@ -8,5 +8,3 @@ metals.sbt
 project/project
 target/
 .bloop/
-result.txt
-result.md
