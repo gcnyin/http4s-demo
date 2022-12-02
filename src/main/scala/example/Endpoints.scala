@@ -5,16 +5,20 @@ import sttp.tapir._
 import sttp.tapir.server.ServerEndpoint
 
 object Endpoints {
-  final case class User(name: String) extends AnyVal
-
-  private val helloEndpoint: PublicEndpoint[User, Unit, String, Any] =
+  val getEndpoint: Endpoint[Unit, Unit, Unit, String, Any] =
     endpoint.get
-      .in("hello")
-      .in(query[User]("name"))
+      .in("get")
       .out(stringBody)
 
-  private val helloServerEndpoint: ServerEndpoint[Any, IO] =
-    helloEndpoint.serverLogicSuccess(user => IO.pure(s"Hello ${user.name}"))
+  val increaseAndGetEndpoint: Endpoint[Unit, Unit, Unit, String, Any] =
+    endpoint.get
+      .in("increase-and-get")
+      .out(stringBody)
 
-  val all: List[ServerEndpoint[Any, IO]] = List(helloServerEndpoint)
+  val decreaseAndGetEndpoint: Endpoint[Unit, Unit, Unit, String, Any] =
+    endpoint.get
+      .in("decrease-and-get")
+      .out(stringBody)
+
+  val all: List[ServerEndpoint[Any, IO]] = List.empty
 }

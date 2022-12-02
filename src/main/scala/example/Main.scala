@@ -1,6 +1,6 @@
 package example
 
-import cats.effect.kernel.Async
+import cats.effect.kernel.{Async, Ref}
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import cats.syntax.all._
 import com.comcast.ip4s._
@@ -13,28 +13,25 @@ import sttp.tapir.server.http4s.{Http4sServerInterpreter, Http4sServerOptions}
 
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] = {
-    val serverOptions: Http4sServerOptions[IO] = Http4sServerOptions.default[IO]
-
-    val routes = Http4sServerInterpreter[IO](serverOptions)
-      .toRoutes(Endpoints.all)
-
-    val app: Http[IO, IO] = Router("/" -> routes).orNotFound
-
-    val finalApp = Logger.httpApp(logHeaders = true, logBody = false)(GZip(app))
-
-    val resource: Resource[IO, Server] =
-      EmberServerBuilder
+    for {
+      counterRef <- Ref[IO].of(0)
+      serverOptions: Http4sServerOptions[IO] = Http4sServerOptions.default[IO]
+      serverLogic = new ServerLogic(counterRef)
+      routes = Http4sServerInterpreter[IO](serverOptions).toRoutes(serverLogic.all)
+      app: Http[IO, IO] = Router("/" -> routes).orNotFound
+      finalApp = Logger.httpApp(logHeaders = true, logBody = false)(GZip(app))
+      resource: Resource[IO, Server] = EmberServerBuilder
         .default[IO]
         .withHost(ipv4"0.0.0.0")
         .withPort(port"8080")
         .withHttpApp(finalApp)
         .build >> Resource.eval(Async[IO].never)
-
-    Stream
-      .resource(resource)
-      .drain
-      .compile
-      .drain
-      .as(ExitCode.Success)
+      s <- Stream
+        .resource(resource)
+        .drain
+        .compile
+        .drain
+        .as(ExitCode.Success)
+    } yield s
   }
 }

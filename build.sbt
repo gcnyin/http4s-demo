@@ -5,7 +5,7 @@ val circeVersion = "0.14.3"
 lazy val root = (project in file("."))
   .enablePlugins(JavaServerAppPackaging)
   .settings(
-    name := "blog-demo",
+    name := "http4s-demo",
     organization := "com.github.gcnyin",
     version := "0.0.1-SNAPSHOT",
     scalaVersion := "2.13.10",
