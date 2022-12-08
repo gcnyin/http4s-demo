@@ -13,32 +13,31 @@ object Endpoints {
     implicit val value: JsonCodec[GetCounterResponse] = DeriveJsonCodec.gen[GetCounterResponse]
   }
 
-  final case class IncreaseAndCounterResponse(value: Int)
-  object IncreaseAndCounterResponse {
-    implicit val value: JsonCodec[IncreaseAndCounterResponse] = DeriveJsonCodec.gen[IncreaseAndCounterResponse]
+  final case class IncreaseAndGetResponse(value: Int)
+  object IncreaseAndGetResponse {
+    implicit val value: JsonCodec[IncreaseAndGetResponse] = DeriveJsonCodec.gen[IncreaseAndGetResponse]
   }
 
-  final case class DecreaseAndCounterResponse(value: Int)
+  final case class DecreaseAndGetResponse(value: Int)
 
-  object DecreaseAndCounterResponse {
-    implicit val value: JsonCodec[DecreaseAndCounterResponse] = DeriveJsonCodec.gen[DecreaseAndCounterResponse]
+  object DecreaseAndGetResponse {
+    implicit val value: JsonCodec[DecreaseAndGetResponse] = DeriveJsonCodec.gen[DecreaseAndGetResponse]
   }
-
 
   val getEndpoint: Endpoint[Unit, Unit, Unit, GetCounterResponse, Any] =
     endpoint.get
-      .in("get")
+      .in("counter" / "get")
       .out(jsonBody[GetCounterResponse])
 
-  val increaseAndGetEndpoint: Endpoint[Unit, Unit, Unit, IncreaseAndCounterResponse, Any] =
+  val increaseAndGetEndpoint: Endpoint[Unit, Unit, Unit, IncreaseAndGetResponse, Any] =
     endpoint.get
-      .in("increase-and-get")
-      .out(jsonBody[IncreaseAndCounterResponse])
+      .in("counter" / "increase-and-get")
+      .out(jsonBody[IncreaseAndGetResponse])
 
-  val decreaseAndGetEndpoint: Endpoint[Unit, Unit, Unit, DecreaseAndCounterResponse, Any] =
+  val decreaseAndGetEndpoint: Endpoint[Unit, Unit, Unit, DecreaseAndGetResponse, Any] =
     endpoint.get
-      .in("decrease-and-get")
-      .out(jsonBody[DecreaseAndCounterResponse])
+      .in("counter" / "decrease-and-get")
+      .out(jsonBody[DecreaseAndGetResponse])
 
   val all: List[ServerEndpoint[Any, IO]] = List.empty
 }

@@ -11,11 +11,11 @@ class ServerLogic[F[_]: Async](counterRef: Ref[F, Int]) {
   private val getServerEndpoint: Full[Unit, Unit, Unit, Unit, GetCounterResponse, Any, F] =
     getEndpoint.serverLogicSuccess(_ => counterRef.get.map(GetCounterResponse(_)))
 
-  private val increaseAndGetServerEndpoint: Full[Unit, Unit, Unit, Unit, IncreaseAndCounterResponse, Any, F] =
-    increaseAndGetEndpoint.serverLogicSuccess(_ => counterRef.updateAndGet(_ + 1).map(IncreaseAndCounterResponse(_)))
+  private val increaseAndGetServerEndpoint: Full[Unit, Unit, Unit, Unit, IncreaseAndGetResponse, Any, F] =
+    increaseAndGetEndpoint.serverLogicSuccess(_ => counterRef.updateAndGet(_ + 1).map(IncreaseAndGetResponse(_)))
 
-  private val decreaseAndGetServerEndpoint: Full[Unit, Unit, Unit, Unit, DecreaseAndCounterResponse, Any, F] =
-    decreaseAndGetEndpoint.serverLogicSuccess(_ => counterRef.updateAndGet(_ - 1).map(DecreaseAndCounterResponse(_)))
+  private val decreaseAndGetServerEndpoint: Full[Unit, Unit, Unit, Unit, DecreaseAndGetResponse, Any, F] =
+    decreaseAndGetEndpoint.serverLogicSuccess(_ => counterRef.updateAndGet(_ - 1).map(DecreaseAndGetResponse(_)))
 
   val all: List[ServerEndpoint[Any, F]] = List(getServerEndpoint, increaseAndGetServerEndpoint, decreaseAndGetServerEndpoint)
 }
