@@ -12,6 +12,15 @@ lazy val root = (project in file("."))
       /* tapir */
       "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-json-zio" % tapirVersion,
+      /* tracing */
+      "io.janstenpickle" %% "trace4cats-core" % "0.14.1",
+      "io.janstenpickle" %% "trace4cats-avro-exporter" % "0.14.0",
+      "io.janstenpickle" %% "trace4cats-http4s-client" % "0.14.0",
+      "io.janstenpickle" %% "trace4cats-http4s-server" % "0.14.0",
+      "io.janstenpickle" %% "trace4cats-jaeger-thrift-exporter" % "0.14.0",
+      "io.janstenpickle" %% "trace4cats-jaeger-thrift-http-exporter" % "0.14.0",
+      /* json */
+      "dev.zio" %% "zio-json" % "0.4.2",
       /* http4s */
       "org.http4s" %% "http4s-ember-server" % http4sVersion,
       /* logging */
