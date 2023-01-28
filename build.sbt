@@ -1,5 +1,5 @@
-val http4sVersion = "0.23.16"
-val tapirVersion = "1.2.3"
+val http4sVersion = "0.23.18"
+val tapirVersion = "1.2.7"
 
 lazy val root = (project in file("."))
   .enablePlugins(JavaServerAppPackaging)
