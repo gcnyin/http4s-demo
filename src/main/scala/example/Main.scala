@@ -10,14 +10,21 @@ import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.middleware.{GZip, Logger}
 import org.http4s.server.{Router, Server}
 import sttp.tapir.server.http4s.{Http4sServerInterpreter, Http4sServerOptions}
+import sttp.tapir.server.metrics.prometheus.PrometheusMetrics
 
 object Main extends IOApp {
   override def run(args: List[String]): IO[ExitCode] = {
     for {
       counterRef <- Ref[IO].of(0)
-      serverOptions: Http4sServerOptions[IO] = Http4sServerOptions.default[IO]
+      prometheusMetrics = PrometheusMetrics.default[IO]()
+      metricsEndpoint = prometheusMetrics.metricsEndpoint
+      serverOptions: Http4sServerOptions[IO] =
+        Http4sServerOptions
+          .customiseInterceptors[IO]
+          .metricsInterceptor(prometheusMetrics.metricsInterceptor())
+          .options
       serverLogic = new ServerLogic[IO](counterRef)
-      routes = Http4sServerInterpreter[IO](serverOptions).toRoutes(serverLogic.all)
+      routes = Http4sServerInterpreter[IO](serverOptions).toRoutes(serverLogic.all :+ metricsEndpoint)
       app: Http[IO, IO] = Router("/" -> routes).orNotFound
       finalApp = Logger.httpApp(logHeaders = true, logBody = false)(GZip(app))
       resource: Resource[IO, Server] = EmberServerBuilder
