@@ -1,4 +1,4 @@
-package example
+package example.tapir
 
 import cats.effect.IO
 import sttp.tapir._

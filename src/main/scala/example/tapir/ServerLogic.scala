@@ -1,9 +1,9 @@
-package example
+package example.tapir
 
-import cats.syntax.functor._
-import cats.effect.kernel.Async
 import cats.effect.Ref
-import example.Endpoints._
+import cats.effect.kernel.Async
+import cats.syntax.functor._
+import example.tapir.Endpoints._
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.server.ServerEndpoint.Full
 

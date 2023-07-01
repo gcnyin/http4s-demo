@@ -1,4 +1,4 @@
-package example
+package example.tapir
 
 import cats.effect.kernel.{Async, Ref}
 import cats.effect.{ExitCode, IO, IOApp, Resource}
@@ -12,8 +12,8 @@ import org.http4s.server.{Router, Server}
 import sttp.tapir.server.http4s.{Http4sServerInterpreter, Http4sServerOptions}
 import sttp.tapir.server.metrics.prometheus.PrometheusMetrics
 
-object Main extends IOApp {
-  override def run(args: List[String]): IO[ExitCode] = {
+object Main {
+  def run(args: List[String]): IO[ExitCode] = {
     for {
       counterRef <- Ref[IO].of(0)
       prometheusMetrics = PrometheusMetrics.default[IO]()
